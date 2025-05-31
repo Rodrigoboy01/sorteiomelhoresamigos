@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorteio - Escolha seu número</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #28a745;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    .slot {
+      background: white;
+      border: 2px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .slot input {
+      width: 90%;
+      padding: 6px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+      text-align: center;
+    }
+    .slot.filled {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+    @media (max-width: 600px) {
+      .slot input {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Sorteio - Escolha seu número</header>
+  <div class="container">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const totalSlots = 655;
+    const savedData = JSON.parse(localStorage.getItem('sorteioData') || '{}');
+
+    for (let i = 1; i <= totalSlots; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+
+      const label = document.createElement('div');
+      label.textContent = `Nº ${i}`;
+      slot.appendChild(label);
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = '@seuinsta';
+      input.value = savedData[i] || '';
+      if (savedData[i]) slot.classList.add('filled');
+
+      input.addEventListener('change', () => {
+        savedData[i] = input.value;
+        localStorage.setItem('sorteioData', JSON.stringify(savedData));
+        slot.classList.add('filled');
+      });
+
+      slot.appendChild(input);
+      grid.appendChild(slot);
+    }
+  </script>
+</body>
+</html>
